@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Africa CDC | MCM Evidence Hub - Filoviruses & Arboviruses</title>
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Tableau Embedding Library v3 -->
+    <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F4F7F9;
+            color: #1A2C2E;
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        :root {
+            --primary-deep: #0F3B2C;
+            --primary: #1E6F5C;
+            --primary-light: #EFFAF7;
+            --gold: #D4AF37;
+            --gray-border: #E2E8F0;
+            --text-muted: #4A5B5E;
+        }
+
+        .navbar {
+            background: var(--primary-deep);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .logo img {
+            width: 64px;
+            height: 64px;
+            background: white;
+            padding: 8px;
+            border-radius: 16px;
+            object-fit: contain;
+        }
+        .logo-text p {
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.5rem 0.25rem;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            border-bottom-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.8rem;
+            flex: 1;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #0F3B2C 0%, #1E6F5C 100%);
+            border-radius: 28px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        .hero-section p {
+            opacity: 0.9;
+            max-width: 800px;
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--gray-border);
+        }
+        .category-tab {
+            background: transparent;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: -2px;
+        }
+        .category-tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .dashboard-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-wrapper {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid var(--gray-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .dashboard-wrapper:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .dashboard-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--primary-deep);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dashboard-title i {
+            color: var(--primary);
+        }
+        .dashboard-subtitle {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-border);
+        }
+        tableau-viz {
+            width: 100%;
+            min-height: 550px;
+            border-radius: 12px;
+        }
+
+        .methodology-section {
+            background: var(--primary-light);
+            border-radius: 24px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .methodology-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid var(--gray-border);
+        }
+        .methodology-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .methodology-card ul {
+            padding-left: 1.2rem;
+        }
+        .btn-outline-sm {
+            background: transparent;
+            border: 1px solid var(--gray-border);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .btn-outline-sm:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .footer {
+            background: #0A2A20;
+            color: #E0E7E5;
+            margin-top: 3rem;
+            padding: 2.5rem 2rem 1.8rem;
+            border-top: 4px solid var(--gold);
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .footer-section h4 {
+            color: var(--gold);
+            border-left: 3px solid var(--gold);
+            padding-left: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .footer-section a {
+            color: #C0D6D0;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .footer-section a:hover {
+            color: var(--gold);
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 0.75rem;
+        }
+
+        .loading-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            background: #F8FAFC;
+            border-radius: 16px;
+            color: var(--text-muted);
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container { padding: 1rem; }
+            .dashboard-wrapper { padding: 1rem; }
+            tableau-viz { min-height: 400px; }
+            .category-tab { padding: 0.7rem 1.2rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <img src="AfricaCDClogo.png" alt="Africa CDC Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'45\' fill=\'%23D4AF37\'/%3E%3Ctext x=\'50\' y=\'70\' font-size=\'48\' text-anchor=\'middle\' fill=\'%231B4D3E\' font-weight=\'bold\'%3E♂%3C/text%3E%3C/svg%3E';">
+        <div class="logo-text">
+            <p><i class="fa fa-bar-chart"></i>Medical Countermeasures Dashboards for Filoviruses & Arboviruses</p>
+        </div>
+    </div>
+    <div class="nav-links">
+        <a href="#" class="active" data-nav="dashboards">Dashboards</a>
+        <a href="#" data-nav="methodology">Methodology</a>
+        <a href="#" data-nav="outputs">Outputs</a>
+    </div>
+</nav>
+
+
+<div class="dashboard-container">
+    <div class="hero-section" id="hero">
+        <p>Interactive evidence synthesis on vaccines, therapeutics, and diagnostics for priority filoviruses (Ebola, Marburg) and arboviruses (Dengue, Rift Valley Fever, Chikungunya). Data derived from WHO Prequalification, WHO EUL, WHO-Listed Authorities, clinical trial registries, and peer-reviewed literature.</p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="category-tabs" id="categoryTabs">
+        <button class="category-tab active" data-category="clinical"><i class="fa fa-flask"></i> Clinical Trials</button>
+        <button class="category-tab" data-category="diagnostics"><i class="fa fa-stethoscope"></i> Diagnostics</button>
+        <button class="category-tab" data-category="vaccines"><i class="fa fa-syringe"></i> Vaccines & Therapeutics</button>
+    </div>
+
+    <!-- CLINICAL TRIALS (2 dashboards) -->
+    <div id="clinical-section" class="dashboard-section active">
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-chart-line"></i> MCM Pipeline Overview</div>
+            <div class="dashboard-subtitle">Clinical development pipeline: vaccines, therapeutics, and diagnostics by phase, pathogen, and African trial participation</div>
+            <div id="viz-pipeline"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-map"></i> African Clinical Trial Footprint</div>
+            <div class="dashboard-subtitle">Interactive map of trial sites, enrollment size, and phase distribution across Africa</div>
+            <div id="viz-africa-footprint"></div>
+        </div>
+    </div>
+
+    <!-- DIAGNOSTICS (7 dashboards) -->
+    <div id="diagnostics-section" class="dashboard-section">
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-microscope"></i> Diagnostic Landscape Overview</div>
+            <div class="dashboard-subtitle">Total diagnostics by pathogen, diagnostic type, technology representation, and authorization status</div>
+            <div id="viz-dx-landscape"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-balance-scale"></i> Regulatory Status Dashboard</div>
+            <div class="dashboard-subtitle">Products by regulatory authority | WHO PQ | WHO EUL | Authorization status by pathogen</div>
+            <div id="viz-dx-regulatory"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-industry"></i> Manufacturer & Market Intelligence</div>
+            <div class="dashboard-subtitle">Manufacturer landscape, market share, production capacity, and supply chain analysis</div>
+            <div id="viz-dx-manufacturer"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-tachometer"></i> Diagnostic Performance Dashboard</div>
+            <div class="dashboard-subtitle">Sensitivity/specificity distribution | Validation status | Performance by intended use</div>
+            <div id="viz-dx-performance"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-cubes"></i> Deployment & Operational Readiness</div>
+            <div class="dashboard-subtitle">Intended use distribution | Sample type | Platform requirements | POC vs laboratory diagnostics</div>
+            <div id="viz-dx-deployment"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-map-marker"></i> Africa Availability Dashboard</div>
+            <div class="dashboard-subtitle">Map of diagnostic availability | Procurement mechanisms | Cost comparison by diagnostic type</div>
+            <div id="viz-dx-availability"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-book"></i> Evidence & Research Dashboard</div>
+            <div class="dashboard-subtitle">Clinical evidence landscape, study outcomes, and research gaps for diagnostic technologies</div>
+            <div id="viz-dx-evidence"></div>
+        </div>
+    </div>
+
+    <!-- VACCINES & THERAPEUTICS (6 dashboards) -->
+    <div id="vaccines-section" class="dashboard-section">
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-check-circle"></i> Product Readiness Dashboard</div>
+            <div class="dashboard-subtitle">Products by category | Authorization status | WHO PQ/EUL | Top manufacturers</div>
+            <div id="viz-vx-readiness"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-building"></i> Regulatory Intelligence Dashboard</div>
+            <div class="dashboard-subtitle">Products by regulatory authority | WHO PQ by pathogen | Approval status by product type</div>
+            <div id="viz-vx-regulatory"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-truck"></i> Product Deployment Dashboard</div>
+            <div class="dashboard-subtitle">Route of administration | Dosage form | Shelf life | Cold chain requirement analysis</div>
+            <div id="viz-vx-deployment"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-users"></i> Target Population Dashboard</div>
+            <div class="dashboard-subtitle">Population coverage matrix | Products by target population | Adult vs pediatric products</div>
+            <div id="viz-vx-population"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-shield"></i> Pathogen Preparedness Dashboard</div>
+            <div class="dashboard-subtitle">Product coverage by pathogen | Vaccine vs therapeutic distribution | Pathogen preparedness score</div>
+            <div id="viz-vx-preparedness"></div>
+        </div>
+        <div class="dashboard-wrapper">
+            <div class="dashboard-title"><i class="fa fa-graduation-cap"></i> Evidence Dashboard</div>
+            <div class="dashboard-subtitle">Clinical trial evidence, efficacy data, safety profiles, and evidence quality assessment</div>
+            <div id="viz-vx-evidence"></div>
+        </div>
+    </div>
+
+    <!-- Methodology Section -->
+    <div class="methodology-section" id="methodology-section" style="display:none;">
+        <h3><i class="fa fa-graduation-cap"></i> Methodology: Rapid Narrative Review</h3>
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h4><i class="fa fa-database"></i> Data Sources</h4>
+                <ul><li>WHO Prequalification & EUL records</li><li>WHO-Listed Authorities</li><li>ClinicalTrials.gov & PACTR</li><li>FIND diagnostics database</li><li>FDA, EMA, African NRAs</li></ul>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-filter"></i> Inclusion Criteria</h4>
+                <ul><li>Late-stage clinical development (Phase II/III)</li><li>WHO-authorized or under review</li><li>Human safety/efficacy data available</li><li>Relevant to African outbreak contexts</li></ul>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-check-circle"></i> Key Analytical Lens</h4>
+                <ul><li>"Is the MCM decision-ready for Africa?"</li><li>Disease burden & outbreak frequency</li><li>Regulatory status (WHO PQ/EUL/LA)</li><li>Operational feasibility</li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Outputs Section -->
+    <div class="methodology-section" id="outputs-section" style="display:none;">
+        <h3><i class="fa fa-file-pdf-o"></i> Expected Outputs</h3>
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h4><i class="fa fa-file-text"></i> Evidence Briefs</h4>
+                <p>2-5 page rapid evidence assessments per disease</p>
+                <button class="btn-outline-sm" onclick="downloadEvidenceBrief()"><i class="fa fa-download"></i> Download Sample Brief</button>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-line-chart"></i> Summary Slide Deck</h4>
+                <p>Decision-maker ready presentation</p>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-book"></i> Manuscript</h4>
+                <p>Full evidence assessment for publication</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4><i class="fa fa-map-marker"></i> Africa CDC Headquarters</h4>
+            <p><i class="fa fa-location-arrow"></i> 16/17, Addis Ababa, Ethiopia</p>
+            <p><i class="fa fa-phone"></i> +251 78 967 7994</p>
+            <p><i class="fa fa-envelope"></i> ntanguligwac@africacdc.org</p>
+        </div>
+        <div class="footer-section">
+            <h4><i class="fa fa-compass"></i> Navigate</h4>
+            <a href="https://khub.africacdc.org/" target="_blank"><i class="fa fa-graduation-cap"></i> KnowledgeHub Portal</a>
+            <a href="https://africacdc.org/" target="_blank"><i class="fa fa-globe"></i> Africa CDC Website</a>
+        </div>
+        <div class="footer-section">
+            <h4><i class="fa fa-share-alt"></i> Follow us</h4>
+            <div class="social-links">
+                <a href="https://twitter.com/AfricaCDC" target="_blank"><i class="fa fa-twitter"></i> X</a>
+                <a href="https://www.linkedin.com/company/africacdc/" target="_blank"><i class="fa fa-linkedin"></i> LinkedIn</a>
+                <a href="https://web.facebook.com/africacdc/" target="_blank"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="https://www.youtube.com/channel/UCWRIrWg4as6umiFK_k80pIg" target="_blank"><i class="fa fa-youtube-play"></i> YouTube</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <i class="fa fa-copyright"></i> 2026 Africa Centres for Disease Control and Prevention
+    </div>
+</footer>
+<div id="alertMessage" style="position: fixed; bottom: 24px; right: 24px; background: var(--primary-deep); color: white; padding: 12px 24px; border-radius: 60px; display: none; z-index: 1100;"></div>
+
+<script>
+    // All 15 dashboard URLs - Pre-configured with your Tableau Public links
+    const dashboardUrls = {
+        // Clinical Trials (2)
+        pipeline: "https://public.tableau.com/views/MCMArboandFiloViruses/DashboardMCMPipelineOverviewClinicalTrials",
+        africaFootprint: "https://public.tableau.com/shared/3P9K9D935",
+        
+        // Diagnostics (7)
+        dxLandscape: "https://public.tableau.com/shared/DKZ426KT6",
+        dxRegulatory: "https://public.tableau.com/shared/NB8Q43QBM",
+        dxManufacturer: "https://public.tableau.com/shared/MJGW2HRNK",
+        dxPerformance: "https://public.tableau.com/shared/BNX5JYTNM",
+        dxDeployment: "https://public.tableau.com/shared/27QGGDRKH",
+        dxAvailability: "https://public.tableau.com/shared/X2GM227Z7",
+        dxEvidence: "https://public.tableau.com/shared/X9F5TPWGM",
+        
+        // Vaccines & Therapeutics (6)
+        vxReadiness: "https://public.tableau.com/shared/KTQGFBRDB",
+        vxRegulatory: "https://public.tableau.com/shared/QCKW3ZD4B",
+        vxDeployment: "https://public.tableau.com/shared/4TZ2DFJ98",
+        vxPopulation: "https://public.tableau.com/shared/7ZB7K6RJW",
+        vxPreparedness: "https://public.tableau.com/shared/DJQQ394ZD",
+        vxEvidence: "https://public.tableau.com/shared/6HTBZ4347"
+    };
+
+    function embedDashboard(containerId, url, title) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        if (!url) {
+            container.innerHTML = `<div class="loading-placeholder"><i class="fa fa-tableau"></i><p>No URL provided for: ${title}</p></div>`;
+            return;
+        }
+        
+        container.innerHTML = '';
+        const vizElement = document.createElement('tableau-viz');
+        vizElement.src = url;
+        vizElement.width = '100%';
+        vizElement.height = '600px';
+        vizElement.toolbar = 'bottom';
+        vizElement.hideTabs = true;
+        container.appendChild(vizElement);
+    }
+
+    function loadAllDashboards() {
+        // Clinical Trials
+        embedDashboard('viz-pipeline', dashboardUrls.pipeline, 'MCM Pipeline Overview');
+        embedDashboard('viz-africa-footprint', dashboardUrls.africaFootprint, 'African Clinical Trial Footprint');
+        
+        // Diagnostics
+        embedDashboard('viz-dx-landscape', dashboardUrls.dxLandscape, 'Diagnostic Landscape');
+        embedDashboard('viz-dx-regulatory', dashboardUrls.dxRegulatory, 'Regulatory Status');
+        embedDashboard('viz-dx-manufacturer', dashboardUrls.dxManufacturer, 'Manufacturer Intelligence');
+        embedDashboard('viz-dx-performance', dashboardUrls.dxPerformance, 'Diagnostic Performance');
+        embedDashboard('viz-dx-deployment', dashboardUrls.dxDeployment, 'Deployment Readiness');
+        embedDashboard('viz-dx-availability', dashboardUrls.dxAvailability, 'Africa Availability');
+        embedDashboard('viz-dx-evidence', dashboardUrls.dxEvidence, 'Evidence Dashboard');
+        
+        // Vaccines & Therapeutics
+        embedDashboard('viz-vx-readiness', dashboardUrls.vxReadiness, 'Product Readiness');
+        embedDashboard('viz-vx-regulatory', dashboardUrls.vxRegulatory, 'Regulatory Intelligence');
+        embedDashboard('viz-vx-deployment', dashboardUrls.vxDeployment, 'Product Deployment');
+        embedDashboard('viz-vx-population', dashboardUrls.vxPopulation, 'Target Population');
+        embedDashboard('viz-vx-preparedness', dashboardUrls.vxPreparedness, 'Pathogen Preparedness');
+        embedDashboard('viz-vx-evidence', dashboardUrls.vxEvidence, 'Evidence Dashboard');
+        
+        showAlert('All 15 dashboards loaded successfully!', 'success');
+    }
+
+    function setupCategorySwitching() {
+        const tabs = document.querySelectorAll('.category-tab');
+        const sections = {
+            clinical: document.getElementById('clinical-section'),
+            diagnostics: document.getElementById('diagnostics-section'),
+            vaccines: document.getElementById('vaccines-section')
+        };
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                Object.values(sections).forEach(s => s.classList.remove('active'));
+                if (sections[category]) sections[category].classList.add('active');
+            });
+        });
+    }
+
+    function setupNavSwitching() {
+        const navLinks = document.querySelectorAll('.nav-links a[data-nav]');
+        const hero = document.getElementById('hero');
+        const categoryTabs = document.getElementById('categoryTabs');
+        const methodology = document.getElementById('methodology-section');
+        const outputs = document.getElementById('outputs-section');
+        const clinical = document.getElementById('clinical-section');
+        const diagnostics = document.getElementById('diagnostics-section');
+        const vaccines = document.getElementById('vaccines-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.dataset.nav;
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                if (target === 'dashboards') {
+                    hero.style.display = 'block';
+                    categoryTabs.style.display = 'flex';
+                    clinical.classList.add('active');
+                    diagnostics.classList.remove('active');
+                    vaccines.classList.remove('active');
+                    methodology.style.display = 'none';
+                    outputs.style.display = 'none';
+                } else if (target === 'methodology') {
+                    hero.style.display = 'none';
+                    categoryTabs.style.display = 'none';
+                    clinical.classList.remove('active');
+                    diagnostics.classList.remove('active');
+                    vaccines.classList.remove('active');
+                    methodology.style.display = 'block';
+                    outputs.style.display = 'none';
+                } else if (target === 'outputs') {
+                    hero.style.display = 'none';
+                    categoryTabs.style.display = 'none';
+                    clinical.classList.remove('active');
+                    diagnostics.classList.remove('active');
+                    vaccines.classList.remove('active');
+                    methodology.style.display = 'none';
+                    outputs.style.display = 'block';
+                }
+            });
+        });
+    }
+
+    function showAlert(message, type) {
+        const alertDiv = document.getElementById('alertMessage');
+        alertDiv.style.background = type === 'error' ? '#DC4C4C' : '#1E6F5C';
+        alertDiv.innerHTML = `<i class="fa fa-info-circle"></i> ${message}`;
+        alertDiv.style.display = 'block';
+        setTimeout(() => alertDiv.style.display = 'none', 3000);
+    }
+
+    function downloadEvidenceBrief() {
+        showAlert('Downloading Evidence Brief: Medical Countermeasures for Filoviruses and Arboviruses', 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupCategorySwitching();
+        setupNavSwitching();
+        loadAllDashboards();
+    });
+
+    window.downloadEvidenceBrief = downloadEvidenceBrief;
+</script>
+</body>
+</html>
