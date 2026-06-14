@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
     <style>
-        /* --- Your existing CSS --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #F4F7F9; color: #1A2C2E; line-height: 1.4; display: flex; flex-direction: column; min-height: 100vh; }
         :root { --primary-deep: #0F3B2C; --primary: #1E6F5C; --primary-light: #EFFAF7; --gold: #D4AF37; --gray-border: #E2E8F0; --text-muted: #4A5B5E; }
@@ -66,7 +65,7 @@
         .social-links a { display: inline-block; }
         .footer-bottom { text-align: center; padding-top: 2rem; margin-top: 2rem; border-top: 1px solid rgba(212, 175, 55, 0.3); font-size: 0.75rem; }
         .loading-placeholder { display: flex; align-items: center; justify-content: center; height: 400px; background: #F8FAFC; border-radius: 16px; color: var(--text-muted); flex-direction: column; gap: 1rem; }
-        @media (max-width: 768px) { .dashboard-container { padding: 0; } .main-tabs { padding: 0 1rem; } .sub-tabs-container { padding: 0 1rem; } .dashboard-content { padding: 0 1rem; } .dashboard-wrapper { padding: 1rem; } tableau-viz { min-height: 400px; } .main-tab { padding: 0.7rem 1.2rem; font-size: 0.85rem; } .sub-tab { padding: 0.4rem 1rem; font-size: 0.8rem; } .interpretation-card { flex-direction: column; } }
+        @media (max-width: 768px) { .dashboard-container { padding: 0; } .main-tabs { padding: 0 1rem; } .sub-tabs-container { padding: 0 1rem; } .dashboard-content { padding: 0 1rem; } .dashboard-wrapper { padding: 1rem; } tableau-viz { min-height: 400px; } .main-tab { padding: 0.7rem 1.2rem; font-size: 0.85rem; } .sub-tab { padding: 0.4rem 1rem; font-size: 0.8rem; } .interpretation-card { flex-direction: column; } .footer { padding: 2rem 1rem 1.5rem; } .footer-container { gap: 1.5rem; } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -278,23 +277,85 @@
         </div>
     </div>
 
-    <!-- Methodology & Outputs Sections (hidden by default) -->
-    <div class="methodology-section" id="methodology-section" style="display:none;">...</div>
-    <div class="methodology-section" id="outputs-section" style="display:none;">...</div>
+    <!-- METHODOLOGY SECTION (hidden by default) -->
+    <div class="methodology-section" id="methodology-section" style="display:none;">
+        <h3><i class="fa fa-graduation-cap"></i> Methodology: Rapid Narrative Review</h3>
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h4><i class="fa fa-database"></i> Data Sources</h4>
+                <ul><li>WHO Prequalification & EUL records</li><li>WHO-Listed Authorities</li><li>ClinicalTrials.gov & PACTR</li><li>FIND diagnostics database</li><li>FDA, EMA, African NRAs</li></ul>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-filter"></i> Inclusion Criteria</h4>
+                <ul><li>Late-stage clinical development (Phase II/III)</li><li>WHO-authorized or under review</li><li>Human safety/efficacy data available</li><li>Relevant to African outbreak contexts</li></ul>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-check-circle"></i> Key Analytical Lens</h4>
+                <ul><li>"Is the MCM decision-ready for Africa?"</li><li>Disease burden & outbreak frequency</li><li>Regulatory status (WHO PQ/EUL/LA)</li><li>Operational feasibility</li></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- OUTPUTS SECTION (hidden by default) -->
+    <div class="methodology-section" id="outputs-section" style="display:none;">
+        <h3><i class="fa fa-file-pdf-o"></i> Expected Outputs</h3>
+        <div class="methodology-grid">
+            <div class="methodology-card">
+                <h4><i class="fa fa-file-text"></i> Evidence Briefs</h4>
+                <p>2-5 page rapid evidence assessments per disease</p>
+                <button class="btn-outline-sm" onclick="downloadEvidenceBrief()"><i class="fa fa-download"></i> Download Sample Brief</button>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-line-chart"></i> Summary Slide Deck</h4>
+                <p>Decision-maker ready presentation</p>
+            </div>
+            <div class="methodology-card">
+                <h4><i class="fa fa-book"></i> Manuscript</h4>
+                <p>Full evidence assessment for publication</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<footer class="footer">...</footer>
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h4><i class="fa fa-map-marker"></i> Africa CDC Headquarters</h4>
+            <p><i class="fa fa-location-arrow"></i> 16/17, Addis Ababa, Ethiopia</p>
+            <p><i class="fa fa-phone"></i> +251 78 696 7994</p>
+            <p><i class="fa fa-envelope"></i> ntanguligwac@africacdc.org</p>
+        </div>
+        <div class="footer-section">
+            <h4><i class="fa fa-compass"></i> Navigate</h4>
+            <a href="https://khub.africacdc.org/" target="_blank"><i class="fa fa-graduation-cap"></i> KnowledgeHub Portal</a>
+            <a href="https://africacdc.org/" target="_blank"><i class="fa fa-globe"></i> Africa CDC Website</a>
+        </div>
+        <div class="footer-section">
+            <h4><i class="fa fa-share-alt"></i> Follow us</h4>
+            <div class="social-links">
+                <a href="https://twitter.com/AfricaCDC" target="_blank"><i class="fa fa-twitter"></i> X</a>
+                <a href="https://www.linkedin.com/company/africacdc/" target="_blank"><i class="fa fa-linkedin"></i> LinkedIn</a>
+                <a href="https://web.facebook.com/africacdc/" target="_blank"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="https://www.youtube.com/channel/UCWRIrWg4as6umiFK_k80pIg" target="_blank"><i class="fa fa-youtube-play"></i> YouTube</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <i class="fa fa-copyright"></i> 2026 Africa Centres for Disease Control and Prevention
+    </div>
+</footer>
+
 <div id="alertMessage" style="position: fixed; bottom: 24px; right: 24px; background: var(--primary-deep); color: white; padding: 12px 24px; border-radius: 60px; display: none; z-index: 1100;"></div>
 
 <script>
-    // --- CORRECTED DASHBOARD URLs ---
+    // DASHBOARD URLs
     const dashboardUrls = {
         // Summary (3)
         summaryGeneral: "https://public.tableau.com/views/MCMArboandFiloViruses/OverallKPI?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
         summaryFootprint: "https://public.tableau.com/views/MCMArboandFiloViruses/AfricaFootprintSummary?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
         summarySuitability: "https://public.tableau.com/views/MCMArboandFiloViruses/SuitabilityforAfrica?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
         
-        // Clinical Development (5) - UPDATED with your new links
+        // Clinical Development (5)
         clinicalPipeline: "https://public.tableau.com/views/MCMArboandFiloViruses/DashboardPipelineoverview?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
         clinicalPhases: "https://public.tableau.com/views/MCMArboandFiloViruses/DashboardTrialPhasesandTimeliness?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
         clinicalSponsors: "https://public.tableau.com/views/MCMArboandFiloViruses/DashboardSponsorAnalysis?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link",
@@ -348,16 +409,13 @@
         showAlert('✅ All 16 dashboards loaded successfully!', 'success');
     }
 
-    // --- UPDATED: Tab Initialization Logic ---
     function initTabs() {
         const mainTabs = document.querySelectorAll('.main-tab');
         const subContainers = document.querySelectorAll('.sub-tabs-container');
         const allDashboardPanels = document.querySelectorAll('.dashboard-panel');
         const allSubTabs = document.querySelectorAll('.sub-tab');
 
-        // Function to set active state for main tab and its first sub-tab
         function activateMainTabAndFirstSub(mainCategory) {
-            // Update main tabs
             mainTabs.forEach(tab => {
                 if (tab.dataset.main === mainCategory) {
                     tab.classList.add('active');
@@ -366,18 +424,14 @@
                 }
             });
 
-            // Update sub-tab containers
             subContainers.forEach(container => {
                 if (container.dataset.main === mainCategory) {
                     container.classList.add('active');
-                    // Find the first sub-tab in this active container and activate it
                     const firstSubTab = container.querySelector('.sub-tab');
                     if (firstSubTab) {
                         const subId = firstSubTab.dataset.sub;
-                        // Update sub-tab active states
                         allSubTabs.forEach(st => st.classList.remove('active'));
                         firstSubTab.classList.add('active');
-                        // Update dashboard panels
                         allDashboardPanels.forEach(panel => panel.classList.remove('active'));
                         const targetPanel = document.getElementById(subId);
                         if (targetPanel) targetPanel.classList.add('active');
@@ -388,7 +442,6 @@
             });
         }
 
-        // Add click listeners to main tabs
         mainTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const mainCategory = tab.dataset.main;
@@ -396,7 +449,6 @@
             });
         });
 
-        // Add click listeners to sub-tabs (existing logic)
         allSubTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const subId = tab.dataset.sub;
@@ -411,11 +463,9 @@
             });
         });
 
-        // Activate the Summary tab by default on page load
         activateMainTabAndFirstSub('summary');
     }
 
-    // Top navigation (Dashboards / Methodology / Outputs)
     function setupNavSwitching() {
         const navLinks = document.querySelectorAll('.nav-links a[data-nav]');
         const hero = document.getElementById('hero');
@@ -438,8 +488,7 @@
                     dashboardContent.style.display = 'block';
                     methodology.style.display = 'none';
                     outputs.style.display = 'none';
-                    // Re-activate the summary tab to ensure proper state
-                    initTabs(); // Re-run initialization to reset to summary tab
+                    initTabs();
                 } else if (target === 'methodology') {
                     hero.style.display = 'none';
                     mainTabs.style.display = 'none';
